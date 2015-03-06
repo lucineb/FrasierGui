@@ -23,6 +23,7 @@ import android.view.WindowManager;
 //import android.widget.TextView;
 
 import com.example.frasier.frasierapp.bluetooth.ConnectedThread;
+//import com.example.frasier.frasierapp.RobotManagerApplication;
 //import com.riverlab.robotmanager.bluetooth.BluetoothDevicesListActivity;
 //import com.example.frasier.frasierapp.FrasierApplication;
 //import com.riverlab.robotmanager.messages.MessageActivity;
@@ -53,17 +54,19 @@ public class MainActivity extends Activity {
                 case CONNECTION_MESSAGE:
                     String text = (String) msg.obj;
                     if (text.equals("connected")) {
-                        System.out.println("Connected");
+                        System.out.println("connected");
                     } else if (text.equals("disconnected")) {
                         System.out.println("disconnected");
                     }
             }
         }
+    };
 
         //private FrasierApplication mApplication;
 
         @Override
-        protected void onCreate(Bundle savedInstanceState) {
+        protected void onCreate(Bundle savedInstanceState)
+        {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
 
@@ -76,12 +79,15 @@ public class MainActivity extends Activity {
             mConnectedThread.start();
             //mVoiceThread.start();
 
-            Handler ConnectedHandler = mConnectedThread.getHandler();
+//             //Example:
+//            Handler connectedHandler = mHandler.getConnectedThreadHandler();
+//            Message msg = connectedHandler.obtainMessage(ConnectedThread.CONNECT_MESSAGE, mSelectedDevice.getName());
+//            connectedHandler.sendMessage(msg);
 
-            Message msg = ConnectedHandler.obtainMessage(mConnectedThread.CONNECT_MESSAGE, "Nexus7" ); //bluetooth address: '08:d4:2b:19:dd:ce'
-            mConnectedThread.sendMessage(msg);
+            Handler connectedHandler = mConnectedThread.getHandler();
+            Message msg = connectedHandler.obtainMessage(ConnectedThread.CONNECT_MESSAGE, "Nexus 10" ); //bluetooth address: '08:d4:2b:19:dd:ce'
+            connectedHandler.sendMessage(msg);
         }
-    };
 
     @Override
     protected void onResume(){
@@ -111,15 +117,15 @@ public class MainActivity extends Activity {
             return super.onOptionsItemSelected(item);
         }
 
-//    public void shutdown()
-//    {
-////Make sure all threads are done before shutting down
-//        while (mApplication.getConnectedThreadHandler()); // != null && mApplication.getVoiceThreadHandler() != null);
-//        mConnectedThread.interrupt();
-//        //mVoiceThread.interrupt();
-//        mConnectedThread = null;
-//        //mVoiceThread = null;
-//        finish();
-//    }
+    public void shutdown()
+    {
+//Make sure all threads are done before shutting down
+        //while (mApplication.getConnectedThreadHandler()); // != null && mApplication.getVoiceThreadHandler() != null);
+        mConnectedThread.interrupt();
+        //mVoiceThread.interrupt();
+        mConnectedThread = null;
+        //mVoiceThread = null;
+        finish();
+    }
 }
 
